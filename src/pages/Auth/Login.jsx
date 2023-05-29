@@ -4,8 +4,7 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { Link, Router, Route } from "react-router-dom";
-import { history } from "../../App";
+import { NavLink, Router } from "react-router-dom";
 import { loginAction } from "../../redux/action/loginAction";
 
 export default function Login() {
@@ -99,12 +98,10 @@ export default function Login() {
           LOG IN
         </Button>
         <div className="d-flex mt-3" style={{ margin: "10px 0" }}>
-          Bạn chưa có tài khoản? 
-          <Router history={history}>
-            <Link to="/register" className="mt-3">
-              Đăng ký ngay!
-            </Link>
-          </Router>
+          Bạn chưa có tài khoản?
+          <NavLink to="/register" className="mt-3">
+            Đăng ký ngay!
+          </NavLink>
         </div>
       </form>
     </>

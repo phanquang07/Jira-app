@@ -1,6 +1,6 @@
 import { Alert, Space, notification } from "antd"
 import axios from "axios"
-import { history } from "../../App"
+import { history } from "../../util/libs/history"
 import { URL_API, TOKEN_CBS, ACCESS_TOKEN, USER_LOGIN } from "../../util/setting"
 import { LOGIN } from "../types/userType"
 
@@ -24,7 +24,7 @@ export const registerAction = (userInfo) => {
         // >
         //   <Alert message="Success Tips" type="success" showIcon closable />
         // </Space>
-        alert("Thành công")
+        // alert("Thành công")
         history.push('/project-management')
       })
       .catch((error) => {
@@ -52,7 +52,7 @@ export const loginAction = (userInfo) => {
       }
     })
       .then((res) => {
-        // console.log('res signin: ', res.data.content);
+        console.log('res signin: ', res.data.content);
         localStorage.setItem(ACCESS_TOKEN, res.data.content.accessToken)
         let userInfo = JSON.stringify(res.data.content)
         localStorage.setItem(USER_LOGIN, userInfo)
@@ -65,7 +65,7 @@ export const loginAction = (userInfo) => {
         history.push('/project-management')
       })
       .catch((error) => {
-        console.log('error login: ', error.response.data.message);
+        console.log('error login: ', error.response.data?.message);
         // <Space
         //   direction="vertical"
         //   style={{

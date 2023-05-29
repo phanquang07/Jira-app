@@ -9,9 +9,8 @@ import {
 } from "@ant-design/icons";
 import { Button, Input } from "antd";
 import { useDispatch } from "react-redux";
-import { Link, Router } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { registerAction } from "../../redux/action/loginAction";
-import { history } from "../../App";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -155,11 +154,9 @@ export default function Register() {
           </Button>
           <div className="d-flex mt-3" style={{ margin: "10px 0" }}>
             Bạn đã có tài khoản?
-            <Router history={history}>
-              <Link to="/login" className="mt-3">
-                Đăng nhập ngay!
-              </Link>
-            </Router>
+            <NavLink to="/login" className="mt-3">
+              Đăng nhập ngay!
+            </NavLink>
           </div>
         </div>
       </form>

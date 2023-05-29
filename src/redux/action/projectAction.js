@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { history } from '../../util/libs/history';
 import { ID_TOKEN, TOKEN_CBS } from '../../util/setting'
 import { URL_API } from "../../util/setting";
 import { CREATE_PROJECT, DELETE_PROJECT, GET_ALL_PROJECT, PROJECT_DETAIL } from '../types/projectListType';
@@ -14,7 +15,7 @@ export const projectListAction = () => {
       }
     })
       .then((res) => {
-        // console.log('GET LIST: ', res.data.content);
+        console.log('projectList: ', res.data.content);
         let action = {
           type: GET_ALL_PROJECT,
           projectList: res.data.content
@@ -54,6 +55,7 @@ export const createProjectAction = (values) => {
         }
         // console.log("action.projectCategory.id: ", action);
         dispatch2(action)
+        history.replace('/project-management')
       })
       .catch((err) => {
         console.log('err projectAction: ', err);
@@ -88,7 +90,7 @@ export const projectDetailAction = (id) => {
 export const deleteProjectAction = (id) => {
   return (dispatch2) => {
     axios({
-      url: `${URL_API}/Project/deleteProject?id=${id}`,
+      url: `${URL_API}/Project/deleteProject?projectId=${id}`,
       method: "DELETE",
       headers: {
         TokenCybersoft: TOKEN_CBS,
@@ -100,7 +102,7 @@ export const deleteProjectAction = (id) => {
         const action = {
           type: DELETE_PROJECT,
           // creator: creator.name,
-          deleteProject: res.data.content
+          deleteProject: res.data.content.id
         }
         dispatch2(action)
       })

@@ -8,10 +8,8 @@ const initialState = {
 
 
 export const projectReducer = (state = initialState, action) => {
-  // console.log("action: ", action);
   switch (action.type) {
     case GET_ALL_PROJECT:
-      // console.log('action list project: ', action.projectList);
       state.projectList = action.projectList
       return { ...state }
     case CREATE_PROJECT:
@@ -27,8 +25,8 @@ export const projectReducer = (state = initialState, action) => {
       console.log('state.projectDetail: ', state.projectDetail);
       return { ...state }
     case DELETE_PROJECT:
-      console.log('action.deleteProject: ', action.deleteProject);
-      state.deleteProject = [...state.projectList, action.deleteProject]
+      action.deleteProject = idProject
+      state.deleteProject = state.projectList.filter((item) => item.id !== idProject)
       return {...state}
     default:
       return state
