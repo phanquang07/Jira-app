@@ -78,7 +78,7 @@ export const projectDetailAction = (id) => {
           type: PROJECT_DETAIL,
           projectDetail: res.data.content
         }
-        // console.log('action.projectdetail: ', action.projectdetail);
+        console.log('action.projectdetail: ', action.projectdetail);
         dispatch2(action)
       })
       .catch((err) => {

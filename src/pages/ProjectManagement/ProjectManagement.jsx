@@ -13,6 +13,7 @@ import {
   AutoComplete,
   Avatar,
   Button,
+  Drawer,
   Modal,
   Popconfirm,
   Popover,
@@ -21,6 +22,7 @@ import {
   Tag,
 } from "antd";
 import { EyeOutlined, FormOutlined, DeleteOutlined } from "@ant-design/icons";
+import Search from "antd/es/input/Search";
 import { SEARCH_USER } from "../../redux/types/projectListType";
 import ProjectDetail from "./ProjectDetail";
 
@@ -58,6 +60,8 @@ export default function ProjectManagement() {
       sortedInfo: sorter,
     });
   };
+
+  const onSearch = (value) => console.log(value);
 
   const clearFilters = () => {
     setState({
@@ -140,17 +144,21 @@ export default function ProjectManagement() {
     dispatch(action);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const showProjectDetail = (id) => {
-    setIsModalOpen(true);
+    setOpen(true);
     const action = projectDetailAction(id);
     dispatch(action);
   };
 
   const deleteProject = (id) => {
-    const action = deleteProjectAction(id)
-    dispatch(action)
+    const action = deleteProjectAction(id);
+    dispatch(action);
   };
 
   const handleOk = () => {
@@ -404,15 +412,15 @@ export default function ProjectManagement() {
               </span>
             </div>
           </div>
-          <Modal
-            title="Thông tin chi tiết"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width={1000}
+          <Drawer
+            title="Project Detail"
+            placement="right"
+            onClose={onClose}
+            open={open}
+            size='large'
           >
             <ProjectDetail />
-          </Modal>
+          </Drawer>
         </>
       ),
     },
@@ -420,6 +428,15 @@ export default function ProjectManagement() {
 
   return (
     <div className="mt-5">
+      <div className="mb-5">
+        <Search
+          placeholder="Search Name"
+          onSearch={onSearch}
+          allowClear
+          enterButton
+          style={{ width: "fit-content" }}
+        />
+      </div>
       <div
         style={{
           display: "flex",

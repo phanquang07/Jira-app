@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function ProjectDetail() {
   const project = useSelector((state) => state.projectReducer.projectDetail);
-  console.log("project: ", project);
+  console.log("project-detail: ", project);
   return (
     <form action="">
       <div className="mb-3">
@@ -69,7 +69,7 @@ export default function ProjectDetail() {
         <Input
           className="form-control"
           name="member"
-          // value={project.members.name}
+          value={project.members.map(item => ` ${item.name}`)}
           readOnly="readOnly"
         />
       </div>

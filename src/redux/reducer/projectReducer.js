@@ -25,8 +25,7 @@ export const projectReducer = (state = initialState, action) => {
       console.log('state.projectDetail: ', state.projectDetail);
       return { ...state }
     case DELETE_PROJECT:
-      action.deleteProject = idProject
-      state.deleteProject = state.projectList.filter((item) => item.id !== idProject)
+      state.deleteProject = state.projectList.filter((item) => item.id !== action.deleteProject)
       return {...state}
     default:
       return state

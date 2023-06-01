@@ -5,21 +5,30 @@ import Header from "../Components/Header/Header";
 import Sidebar from "../Components/Sidebar/Sidebar";
 
 export const HomeLayout = (props) => {
+  const styled = {
+    mainWrapper: {
+      display: 'flex',
+      flexWrap: 'no-wrap'
+    },
+    contents: {
+      width: '100%'
+    }
+  }
   return (
     <Route
       exact
       path={props.path}
       render={(propsRoute) => {
         return (
-          <Row className="app">
-            <Col flex="200px" style={{ background: "yellow" }}>
+          <div className="app">
+            <Header />
+            <div className="main-wrap" style={styled.mainWrapper}>
               <Sidebar />
-            </Col>
-            <Col flex="auto" style={{background:"#999"}}>
-              <Header />
-              <props.component {...propsRoute} />
-            </Col>
-          </Row>
+              <div className="contents" style={styled.contents}>
+                <props.component {...propsRoute} />
+              </div>
+            </div>
+          </div>
         );
       }}
     />
