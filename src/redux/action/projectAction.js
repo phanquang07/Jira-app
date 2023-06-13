@@ -2,7 +2,7 @@ import axios from 'axios'
 import { history } from '../../util/libs/history';
 import { ID_TOKEN, TOKEN_CBS } from '../../util/setting'
 import { URL_API } from "../../util/setting";
-import { CREATE_PROJECT, DELETE_PROJECT, GET_ALL_PROJECT, PROJECT_DETAIL } from '../types/projectListType';
+import { CREATE_PROJECT, DELETE_PROJECT, EDIT_PROJECT, GET_ALL_PROJECT, PROJECT_DETAIL } from '../types/projectListType';
 
 export const projectListAction = () => {
   return (dispatch2) => {
@@ -78,11 +78,44 @@ export const projectDetailAction = (id) => {
           type: PROJECT_DETAIL,
           projectDetail: res.data.content
         }
-        console.log('action.projectdetail: ', action.projectdetail);
         dispatch2(action)
       })
       .catch((err) => {
         console.log('Error Project Detail: ', err);
+      })
+  }
+}
+
+export const editProjectAction = (id, values) => {
+  console.log('values edit: ', values);
+  return (dispatch2) => {
+    axios({
+      url: `${URL_API}/Project/updateProject?projectId=${id}`,
+      method: "PUT",
+      data: {
+        data: {
+          id: values.id,
+          projectName: values.projectName,
+          creator: values.creator,
+          description: values.description,
+          categoryId: values.categoryId
+        },
+      },
+      headers: {
+        TokenCybersoft: TOKEN_CBS,
+        Authorization: 'Bearer ' + ID_TOKEN
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        const action = {
+          type: EDIT_PROJECT,
+          editProject: res.data.content
+        }
+        dispatch2(action)
+      })
+      .catch((err) => {
+        console.log(err)
       })
   }
 }

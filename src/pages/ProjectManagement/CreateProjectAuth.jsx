@@ -1,4 +1,5 @@
 import { Editor } from "@tinymce/tinymce-react";
+import { Button, Input, Select } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect } from "react";
@@ -76,16 +77,27 @@ export default function CreateProject(props) {
       <div style={{ width: "60%" }} className="mt-4">
         {/* Project name */}
         <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
+          <label htmlFor="create-project-input" className="form-label">
+            Project Name:
+          </label>
+          <Input
+            id="create-project-input"
             className="form-control"
             name="projectName"
             placeholder="Tên dự án"
-            // required="required"
             onChange={handleChange}
             onBlur={handleBlur}
             value={values.projectName}
           />
+          {/* <input
+            id="createProjectInput"
+            className="form-control"
+            name="projectName"
+            placeholder="Tên dự án"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.projectName}
+          /> */}
           {touched.projectName && errors.projectName ? (
             <div
               className="d-flex text-danger"
@@ -97,14 +109,18 @@ export default function CreateProject(props) {
         </div>
         {/* Category */}
         <div className="mb-3">
-          <label className="form-label">Category</label>
+          <label htmlFor="create-project-select" className="form-label">
+            Category
+          </label>
           <select
+            id="create-project-select"
             className="form-control"
             name="categoryId"
             onChange={handleChange}
             onBlur={handleBlur}
             value={values.categoryId}
           >
+            {console.log(renderProjectCategory())}
             {renderProjectCategory()}
           </select>
         </div>
@@ -132,25 +148,17 @@ export default function CreateProject(props) {
             }}
             onEditorChange={handleEditorChange}
             value={values.description}
-            onClick={(values) => {
-              // getApiCreateProject(values);
-              const action = createProjectAction(values);
-              dispatch(action);
-            }}
           />
         </div>
-        <button className="btn btn-primary" type="submit">
-          Save
-        </button>
-        <button
-          type="button"
+        <Button type="primary">Save</Button>
+        <Button
           className="btn btn-secondary ml-3"
           onClick={() => {
             props.history.goBack();
           }}
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -5,6 +5,7 @@ import {
   deleteProjectAction,
   projectDetailAction,
   projectListAction,
+  editProjectAction,
 } from "../../redux/action/projectAction";
 import { useRef } from "react";
 import { useState } from "react";
@@ -14,33 +15,28 @@ import {
   Avatar,
   Button,
   Drawer,
-  Modal,
   Popconfirm,
   Popover,
   Space,
   Table,
   Tag,
 } from "antd";
-import { EyeOutlined, FormOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  FormOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import { SEARCH_USER } from "../../redux/types/projectListType";
 import ProjectDetail from "./ProjectDetail";
+import EditProject from "./EditProject";
 
 export default function ProjectManagement() {
-  const projectList = useSelector((state) => state.projectReducer.projectList);
-  // console.log("Project List: ", projectList);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
-  const projectDetail = useSelector(
-    (state) => state.projectReducer.projectDetail
-  );
-  // console.log("projectDetail: ", projectDetail);
-
-  const usersSearched = useSelector((state) => state.userReducer.usersSearched);
-  // console.log("usersSearched: ", usersSearched);
   const [userSearch, setUserSearch] = useState("");
-
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     filteredInfo: null,
     sortedInfo: null,
@@ -48,10 +44,18 @@ export default function ProjectManagement() {
 
   useEffect(() => {
     getApiProjectManagement();
-    // getApiProjectDetail();
   }, []);
 
   const searchRef = useRef(null);
+
+  const projectList = useSelector((state) => state.projectReducer.projectList);
+  // console.log("Project List: ", projectList);
+  const usersSearched = useSelector((state) => state.userReducer.usersSearched);
+  // console.log("usersSearched: ", usersSearched);
+
+  const dispatch = useDispatch();
+
+  const onSearch = (value) => console.log(value);
 
   const handleChange = (pagination, filters, sorter, extra) => {
     // console.log("filters, sorter: ", pagination, filters, sorter, extra);
@@ -60,8 +64,6 @@ export default function ProjectManagement() {
       sortedInfo: sorter,
     });
   };
-
-  const onSearch = (value) => console.log(value);
 
   const clearFilters = () => {
     setState({
@@ -83,7 +85,7 @@ export default function ProjectManagement() {
   const content = (record, index) => {
     // console.log("record: ", record);
     return (
-      <div>
+      <>
         <AutoComplete
           value={userSearch}
           onChange={(value) => {
@@ -105,13 +107,14 @@ export default function ProjectManagement() {
           style={{ width: "100%" }}
           onSelect={(value, option) => {
             setUserSearch(option.label);
-            dispatch({
+            const action = {
               type: GET_LIST_MEMBER,
               project: {
                 ...record,
                 members: [...record.members, { id: value }],
               },
-            });
+            };
+            dispatch(action);
           }}
           onSearch={(value) => {
             if (searchRef.current) {
@@ -126,13 +129,10 @@ export default function ProjectManagement() {
           }}
           placeholder="Username"
         />
-      </div>
+      </>
     );
   };
-
-  // console.log("projectList: ", projectList);
   let dataListProject = projectList.map((item) => {
-    // console.log("item: ", item);
     return {
       ...item,
       projectCategoryName: item.projectCategoryName,
@@ -144,28 +144,37 @@ export default function ProjectManagement() {
     dispatch(action);
   };
 
-  const [open, setOpen] = useState(false);
-
-  const onClose = () => {
-    setOpen(false);
+  const onCloseDetail = () => {
+    setOpenDetail(false);
   };
 
-  const showProjectDetail = (id) => {
-    setOpen(true);
+  const onCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const projectDetail = (id) => {
+    setOpenDetail(true);
     const action = projectDetailAction(id);
+    dispatch(action);
+  };
+
+  const editProject = (id) => {
+    const values = {
+      id: id,
+      projectName: projectName,
+      creator: creator,
+      description: description,
+      categoryId: categoryId,
+    };
+    setOpenEdit(true);
+    const action = editProjectAction(id, values);
+    console.log("action: ", action);
     dispatch(action);
   };
 
   const deleteProject = (id) => {
     const action = deleteProjectAction(id);
     dispatch(action);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   const columns = [
@@ -357,8 +366,7 @@ export default function ProjectManagement() {
                 style={{ cursor: "pointer" }}
                 key={index}
                 onClick={() => {
-                  // console.log('record: ', record.id);
-                  showProjectDetail(record.id);
+                  projectDetail(record.id);
                 }}
               >
                 <EyeOutlined style={{ fontSize: 18 }} />
@@ -374,7 +382,7 @@ export default function ProjectManagement() {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  // showEditProjectDrawer(record.id);
+                  editProject(record.id);
                 }}
               >
                 <FormOutlined style={{ fontSize: 18 }} />
@@ -415,11 +423,20 @@ export default function ProjectManagement() {
           <Drawer
             title="Project Detail"
             placement="right"
-            onClose={onClose}
-            open={open}
-            size='large'
+            onClose={onCloseDetail}
+            open={openDetail}
+            size="large"
           >
             <ProjectDetail />
+          </Drawer>
+          <Drawer
+            title="Edit Project"
+            placement="right"
+            onClose={onCloseEdit}
+            open={openEdit}
+            size="large"
+          >
+            <EditProject />
           </Drawer>
         </>
       ),
@@ -428,35 +445,35 @@ export default function ProjectManagement() {
 
   return (
     <div className="mt-5">
-      <div className="mb-5">
-        <Search
-          placeholder="Search Name"
-          onSearch={onSearch}
-          allowClear
-          enterButton
-          style={{ width: "fit-content" }}
-        />
-      </div>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: "20px",
+          margin: "10px 10px 20px 10px",
         }}
       >
-        <Space style={{ marginBottom: 16 }}>
-          <Button onClick={clearFilters}>Clear filters</Button>
-          <Button onClick={clearAll}>Clear filters and sorters</Button>
-        </Space>
+        <div className="mb-5">
+          <Search
+            placeholder="Search Name"
+            onSearch={onSearch}
+            allowClear
+            enterButton
+            style={{ width: "fit-content", margin: "10px 0" }}
+          />
+        </div>
         <Space>
           <NavLink to="/Project/createProjectAuthorize">
-            <button className="btn btn-success btn-sm" type="button">
-              <i className="fa fa-plus"></i>
-              <span style={{ marginLeft: 4 }}>Create New Project</span>
-            </button>
+            <Button type="primary">
+              <PlusOutlined />
+              Create Project
+            </Button>
           </NavLink>
         </Space>
       </div>
+      <Space style={{ margin: "0 0 10px 10px" }}>
+        <Button onClick={clearFilters}>Clear filters</Button>
+        <Button onClick={clearAll}>Clear filters and sorters</Button>
+      </Space>
       <Table
         columns={columns}
         rowKey={"id"}

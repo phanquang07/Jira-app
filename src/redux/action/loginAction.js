@@ -65,7 +65,7 @@ export const loginAction = (userInfo) => {
         history.push('/project-management')
       })
       .catch((error) => {
-        console.log('error login: ', error.response.data?.message);
+        console.log('error login: ', error.response?.data.message);
         // <Space
         //   direction="vertical"
         //   style={{

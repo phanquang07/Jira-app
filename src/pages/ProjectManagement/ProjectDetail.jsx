@@ -1,11 +1,13 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { Input } from "antd";
 import React from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function ProjectDetail() {
-  const project = useSelector((state) => state.projectReducer.projectDetail);
-  console.log("project-detail: ", project);
+  const projectDetail = useSelector((state) => state.projectReducer.projectDetail);
+  // console.log("project-detail: ", projectDetail.members);
+  
   return (
     <form action="">
       <div className="mb-3">
@@ -13,7 +15,7 @@ export default function ProjectDetail() {
         <Input
           className="form-control"
           name="projectId"
-          value={project.id}
+          value={projectDetail.id}
           readOnly="readOnly"
         />
       </div>
@@ -22,21 +24,21 @@ export default function ProjectDetail() {
         <Input
           className="form-control"
           name="projectName"
-          value={project.projectName}
+          value={projectDetail.projectName}
           readOnly="readOnly"
         />
       </div>
       <div className="mb-3">
         <label className="form-label">Category</label>
         <select className="form-control" name="categoryId" readOnly="readOnly">
-          <option>{project.projectCategory?.name}</option>
+          <option>{projectDetail.projectCategory?.name}</option>
         </select>
       </div>
       <div className="mb-3">
         <label className="form-label">Description</label>
         <Editor
           name="description"
-          initialValue={project.description}
+          initialValue={projectDetail.description}
           init={{
             height: 170,
             menubar: false,
@@ -60,7 +62,7 @@ export default function ProjectDetail() {
         <Input
           className="form-control"
           name="creatorName"
-          value={project.creator?.name}
+          value={projectDetail.creator?.name}
           readOnly="readOnly"
         />
       </div>
@@ -69,7 +71,7 @@ export default function ProjectDetail() {
         <Input
           className="form-control"
           name="member"
-          value={project.members.map(item => ` ${item.name}`)}
+          value={ projectDetail.members != '[]' ? projectDetail.members?.map(item => ` ${item.name}`) : ''}
           readOnly="readOnly"
         />
       </div>

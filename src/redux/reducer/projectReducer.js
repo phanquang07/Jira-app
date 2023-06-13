@@ -1,9 +1,10 @@
-import { CREATE_PROJECT, DELETE_PROJECT, GET_ALL_PROJECT, GET_LIST_MEMBER, PROJECT_DETAIL } from "../../redux/types/projectListType";
+import { CREATE_PROJECT, DELETE_PROJECT, EDIT_PROJECT, GET_ALL_PROJECT, GET_LIST_MEMBER, PROJECT_DETAIL } from "../../redux/types/projectListType";
 
 const initialState = {
   projectList: [],
   members: [],
-  projectDetail: {}
+  projectDetail: {},
+  projectUpdate: {}
 }
 
 
@@ -22,11 +23,13 @@ export const projectReducer = (state = initialState, action) => {
     case PROJECT_DETAIL:
       state.projectDetail = action.projectDetail
       // console.log("action.projectDetail: ", action.projectDetail);
-      console.log('state.projectDetail: ', state.projectDetail);
+      return { ...state }
+    case EDIT_PROJECT:
+      state.projectUpdate = action.editProject
       return { ...state }
     case DELETE_PROJECT:
       state.deleteProject = state.projectList.filter((item) => item.id !== action.deleteProject)
-      return {...state}
+      return { ...state }
     default:
       return state
   }

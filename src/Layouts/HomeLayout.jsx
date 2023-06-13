@@ -11,7 +11,8 @@ export const HomeLayout = (props) => {
       flexWrap: 'no-wrap'
     },
     contents: {
-      width: '100%'
+      width: '100%',
+      padding: '0 10px'
     }
   }
   return (

@@ -10,7 +10,7 @@ export default function Header() {
     if (uLogin != null) {
       return (
         <NavLink className="nav-link" to="/profile">
-          {console.log(uLogin)}
+          {/* {console.log(uLogin)} */}
           {uLogin.name}
         </NavLink>
       );
